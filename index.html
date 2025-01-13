@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebRTC音频同步播放</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/peerjs@1.4.7/dist/peerjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://unpkg.com/html5-qrcode"></script>
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <div class="container">
+        <h1>WebRTC音频同步播放</h1>
+        
+        <div class="mode-selection">
+            <button id="hostMode">我是主机(电脑端)</button>
+            <button id="clientMode">我是客户端(手机端)</button>
+        </div>
+
+        <div class="status">
+            <p>状态: <span id="connectionStatus">请选择模式</span></p>
+            <p>设备序号: <span id="deviceNumber">--</span></p>
+            <p>当前延迟: <span id="latencyDisplay">--</span> ms</p>
+            <div id="devicesList" class="devices-list" style="display: none;">
+                <h3>已连接设备</h3>
+                <div id="devicesInfo"></div>
+            </div>
+            <div class="manual-calibration" style="display: none;">
+                <p>手动校准:
+                    <input type="number" id="manualLatency" value="0" min="-1000" max="1000" step="1">
+                    <button id="applyLatency">应用</button>
+                    ms
+                </p>
+            </div>
+        </div>
+
+        <div id="hostPanel" class="panel" style="display: none;">
+            <div class="connection-info">
+                <div class="invite-section">
+                    <h2>邀请码</h2>
+                    <div id="inviteCode" class="code-display"></div>
+                    <button id="copyInviteCode" class="copy-btn">复制邀请码</button>
+                </div>
+                
+                <div class="divider"></div>
+                
+                <div class="qr-section">
+                    <h2>扫描二维码加入</h2>
+                    <div id="qrcode"></div>
+                </div>
+            </div>
+            
+            <div class="host-features" style="display: none;">
+                <div class="feature-buttons">
+                    <div class="feature-button">
+                        <label for="audioInput" class="upload-btn">
+                            <span class="icon">🎵</span>
+                            <span class="text">选择音频文件</span>
+                        </label>
+                        <input type="file" id="audioInput" accept="audio/*" style="display: none;">
+                    </div>
+                    
+                    <div class="feature-button">
+                        <button id="captureAudioBtn" class="capture-btn">
+                            <span class="icon">🎧</span>
+                            <span class="text">选择网页声音</span>
+                        </button>
+                    </div>
+
+                    <div class="feature-button">
+                        <button id="calibrateLatencyBtn" class="calibrate-btn">
+                            <span class="icon">⚡</span>
+                            <span class="text">校准延迟</span>
+                        </button>
+                    </div>
+
+                    <div class="feature-button">
+                        <button id="calibratePlayBtn" class="calibrate-play-btn">
+                            <span class="icon">▶️</span>
+                            <span class="text">校准播放</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="clientPanel" class="panel" style="display: none;">
+            <div class="connection-info">
+                <h2>加入房间</h2>
+                <div class="join-methods">
+                    <div class="scan-input">
+                        <button id="scanQRBtn">扫描二维码</button>
+                    </div>
+                    <div class="code-input-section">
+                        <div class="code-input-container">
+                            <input type="text" maxlength="1" class="code-input" data-index="0">
+                            <input type="text" maxlength="1" class="code-input" data-index="1">
+                            <input type="text" maxlength="1" class="code-input" data-index="2">
+                            <input type="text" maxlength="1" class="code-input" data-index="3">
+                            <input type="text" maxlength="1" class="code-input" data-index="4">
+                            <input type="text" maxlength="1" class="code-input" data-index="5">
+                        </div>
+                    </div>
+                    <div id="qr-reader" style="display: none;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="audio-controls" style="display: none;">
+            <audio id="audioPlayer" controls></audio>
+            <div class="play-control">
+                <button id="startPlayButton" class="play-btn">
+                    <span class="icon">▶️</span>
+                    <span class="text">开始播放</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 
